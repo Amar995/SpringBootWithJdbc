@@ -1,7 +1,8 @@
 package com.config.controller;
 
+import java.sql.Date;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,12 +19,15 @@ public class TotalUsersController {
 	private TotalUserService total;
 
 	@GetMapping("/totalUser")
-	public int getTotalUser(@DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam Date startDate,@DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam Date endDate) {
+	public int getTotalUser(@DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam(defaultValue = "#{T(java.time.LocalDate).now()}") LocalDate startDate,
+			@DateTimeFormat(pattern = "yyyy-MM-dd")@RequestParam(defaultValue = "#{T(java.time.LocalDate).now().withDayOfMonth(T(java.time.LocalDate).now().getMonth().length(T(java.time.LocalDate).now().isLeapYear()))}") LocalDate endDate) {
 		
 		SimpleDateFormat date=new SimpleDateFormat("yyyy-MM-dd");
-		
-		String sdate=date.format(startDate);
-		String edate=date.format(endDate);
+		Date sdate1=Date.valueOf(startDate);
+		Date end=Date.valueOf(endDate);
+
+		String sdate=date.format(sdate1);
+		String edate=date.format(end);
 		
         System.out.println(sdate+"   "+edate);
 		int totalUser=0;
